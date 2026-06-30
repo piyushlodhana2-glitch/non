@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Password Protection</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#4facfe,#00f2fe);
+}
+
+.container{
+width:350px;
+background:white;
+padding:30px;
+border-radius:15px;
+box-shadow:0 15px 30px rgba(0,0,0,.2);
+text-align:center;
+}
+
+h2{
+margin-bottom:20px;
+color:#333;
+}
+
+input{
+width:100%;
+padding:12px;
+margin:10px 0;
+border:1px solid #ccc;
+border-radius:8px;
+font-size:16px;
+}
+
+button{
+width:100%;
+padding:12px;
+margin-top:15px;
+border:none;
+border-radius:8px;
+background:#2196F3;
+color:white;
+font-size:16px;
+cursor:pointer;
+transition:.3s;
+}
+
+button:hover{
+background:#1976D2;
+}
+
+.exit{
+background:#e53935;
+}
+
+.exit:hover{
+background:#c62828;
+}
+
+.msg{
+margin-top:15px;
+font-weight:bold;
+color:red;
+}
+
+.success{
+color:green;
+font-size:20px;
+margin-bottom:20px;
+}
+
+.hidden{
+display:none;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<div id="setup">
+
+<h2>Create Password</h2>
+
+<input type="password" id="pass1" placeholder="Enter Password">
+
+<input type="password" id="pass2" placeholder="Confirm Password">
+
+<button onclick="createPassword()">Protect</button>
+
+<p class="msg" id="setupMsg"></p>
+
+</div>
+
+
+<div id="protected" class="hidden">
+
+<div class="success">🔒 Website is Protected</div>
+
+<p style="margin-bottom:20px;">
+This website is currently protected.
+</p>
+
+<button class="exit" onclick="showExit()">Exit</button>
+
+</div>
+
+
+<div id="exitBox" class="hidden">
+
+<h2>Enter Password</h2>
+
+<input type="password" id="exitPassword" placeholder="Password">
+
+<button onclick="unlock()">Unlock</button>
+
+<p class="msg" id="exitMsg"></p>
+
+</div>
+
+</div>
+
+<script>
+
+if(localStorage.getItem("websitePassword")){
+
+document.getElementById("setup").classList.add("hidden");
+document.getElementById("protected").classList.remove("hidden");
+
+}
+
+function createPassword(){
+
+let p1=document.getElementById("pass1").value;
+let p2=document.getElementById("pass2").value;
+
+if(p1==""){
+document.getElementById("setupMsg").innerHTML="Enter Password";
+return;
+}
+
+if(p1!==p2){
+document.getElementById("setupMsg").innerHTML="Passwords do not match";
+return;
+}
+
+localStorage.setItem("websitePassword",p1);
+
+document.getElementById("setup").classList.add("hidden");
+document.getElementById("protected").classList.remove("hidden");
+
+}
+
+function showExit(){
+
+document.getElementById("protected").classList.add("hidden");
+document.getElementById("exitBox").classList.remove("hidden");
+
+}
+
+function unlock(){
+
+let saved=localStorage.getItem("websitePassword");
+let entered=document.getElementById("exitPassword").value;
+
+if(saved===entered){
+
+localStorage.removeItem("websitePassword");
+
+alert("Protection Removed!");
+
+location.reload();
+
+}else{
+
+document.getElementById("exitMsg").innerHTML="Incorrect Password";
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
